@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volumetric Shear Reinforcement (BNBC 2020)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Volumetric Shear Reinforcement (BNBC 2020)</h1>
+        
+        <div class="calculator">
+            <div class="input-section">
+                <h2>Input Parameters</h2>
+                <div class="form-group">
+                    <label for="c1">C1 (inches):</label>
+                    <input type="number" id="c1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="c2">C2 (inches):</label>
+                    <input type="number" id="c2" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="clearCover">Clear Cover (inches):</label>
+                    <input type="number" id="clearCover" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="fc">f'c (ksi):</label>
+                    <input type="number" id="fc" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="fy">f_y (ksi):</label>
+                    <input type="number" id="fy" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="tieSpacing">Tie Spacing (inches):</label>
+                    <input type="number" id="tieSpacing" step="0.01" required>
+                </div>
+                <button id="calculate">Calculate</button>
+            </div>
+            
+            <div class="results-section">
+                <h2>Results</h2>
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>hc1</td>
+                            <td id="hc1Result">-</td>
+                            <td>inches</td>
+                        </tr>
+                        <tr>
+                            <td>hc2</td>
+                            <td id="hc2Result">-</td>
+                            <td>inches</td>
+                        </tr>
+                        <tr>
+                            <td>Ag</td>
+                            <td id="agResult">-</td>
+                            <td>in²</td>
+                        </tr>
+                        <tr>
+                            <td>Ach</td>
+                            <td id="achResult">-</td>
+                            <td>in²</td>
+                        </tr>
+                        <tr>
+                            <td>Ash1</td>
+                            <td id="ash1Result">-</td>
+                            <td>in²</td>
+                        </tr>
+                        <tr>
+                            <td>Ash2</td>
+                            <td id="ash2Result">-</td>
+                            <td>in²</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
