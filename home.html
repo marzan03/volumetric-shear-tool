@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrucVision | Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="home.html">StrucVision</a>
+            </div>
+            <div class="menu-items">
+                <ul>
+                    <li><a href="home.html" class="active">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Structural</a>
+                            <a href="#">Geotechnical</a>
+                            <a href="#">Transportation</a>
+                            <a href="#">Environmental</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Post</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li class="dropdown">
+                        <a href="#">Tools <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="index.html">Volumetric Shear Reinforcement</a>
+                            <a href="#">Beam Design</a>
+                            <a href="#">Column Design</a>
+                            <a href="#">Unit Converter</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-box">
+                <form action="#" method="get">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container home-container">
+        <section class="welcome-section">
+            <h1>Welcome to StrucVision</h1>
+            <p class="welcome-text">
+                StrucVision is your comprehensive platform for structural engineering tools and resources. 
+                Our mission is to provide engineers, students, and professionals with accurate, 
+                user-friendly calculators and design tools to streamline your workflow.
+            </p>
+        </section>
+        
+        <section class="tools-section">
+            <h2>Our Engineering Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-columns"></i></div>
+                    <h3>Volumetric Shear Reinforcement</h3>
+                    <p>Calculate shear reinforcement requirements according to BNBC 2020 standards.</p>
+                    <a href="index.html" class="tool-link">Use Calculator <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-ruler-combined"></i></div>
+                    <h3>Beam Design</h3>
+                    <p>Design reinforced concrete beams with comprehensive analysis and detailing.</p>
+                    <a href="#" class="tool-link">Coming Soon <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-building"></i></div>
+                    <h3>Column Design</h3>
+                    <p>Analyze and design reinforced concrete columns for various loading conditions.</p>
+                    <a href="#" class="tool-link">Coming Soon <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <h3>Unit Converter</h3>
+                    <p>Convert between different engineering units with precision and ease.</p>
+                    <a href="#" class="tool-link">Coming Soon <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="video-section">
+            <h2>Featured Tutorial</h2>
+            <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Engineering Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p class="video-description">
+                Watch our tutorial on how to effectively use StrucVision's calculators for your engineering projects.
+            </p>
+        </section>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2023 StrucVision. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>

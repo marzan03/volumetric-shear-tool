@@ -1,7 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the calculate button and add click event listener
+    // Highlight active menu item based on current page
+    highlightActiveMenuItem();
+    
+    function highlightActiveMenuItem() {
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        // Default to home.html if no page is specified
+        const activePage = currentPage === '' ? 'home.html' : currentPage;
+        
+        // Remove any existing active classes
+        document.querySelectorAll('.menu-items a').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Add active class to current page link
+        if (activePage === 'home.html') {
+            document.querySelector('.menu-items a[href="home.html"]').classList.add('active');
+        } else if (activePage === 'index.html') {
+            // For tools dropdown, we need to handle differently
+            const toolsLink = document.querySelector('.menu-items .dropdown a[href="#"]:not([class*="dropdown-content"])');
+            if (toolsLink && toolsLink.textContent.trim().startsWith('Tools')) {
+                toolsLink.classList.add('active');
+            }
+        }
+    }
+    // Get the calculate button and add click event listener if it exists
     const calculateButton = document.getElementById('calculate');
-    calculateButton.addEventListener('click', performCalculations);
+    if (calculateButton) {
+        calculateButton.addEventListener('click', performCalculations);
+    }
+    
+    // Mobile dropdown menu functionality
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    // For mobile devices, make dropdowns toggle on click
+    if (window.innerWidth <= 768) {
+        dropdowns.forEach(dropdown => {
+            const dropdownLink = dropdown.querySelector('a');
+            dropdownLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const content = this.nextElementSibling;
+                
+                // Close all other dropdowns
+                dropdowns.forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        const otherContent = otherDropdown.querySelector('.dropdown-content');
+                        otherContent.style.maxHeight = null;
+                    }
+                });
+                
+                // Toggle current dropdown
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+    }
     
     // Function to perform all calculations
     function performCalculations() {

@@ -12,6 +12,267 @@ body {
     line-height: 1.6;
 }
 
+/* Home Page Styles */
+.home-container {
+    max-width: 1200px;
+    padding: 40px 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 20px auto;
+    color: #555;
+}
+
+.tools-section {
+    margin-bottom: 50px;
+}
+
+.tools-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.tool-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tool-icon {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.tool-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.tool-card p {
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.tool-link {
+    display: inline-block;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.tool-link:hover {
+    color: #2980b9;
+}
+
+.video-section {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-section h2 {
+    margin-bottom: 25px;
+    color: #2c3e50;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.video-description {
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+}
+
+.logo a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.menu-items ul {
+    display: flex;
+    list-style: none;
+}
+
+.menu-items li {
+    position: relative;
+    margin-left: 20px;
+}
+
+.menu-items a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 20px 10px;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.menu-items a:hover {
+    color: #3498db;
+}
+
+.menu-items a.active {
+    color: #3498db;
+    font-weight: bold;
+    border-bottom: 2px solid #3498db;
+}
+
+/* Dropdown Menu */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #3498db;
+}
+
+.dropdown-content a.active {
+    background-color: #e3f2fd;
+    color: #3498db;
+    font-weight: bold;
+    border-left: 3px solid #3498db;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    align-items: center;
+}
+
+.search-box form {
+    display: flex;
+    align-items: center;
+}
+
+.search-box input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    width: 180px;
+}
+
+.search-box button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    margin-top: 0;
+    width: auto;
+}
+
+.search-box button:hover {
+    background-color: #2980b9;
+}
+
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -137,6 +398,72 @@ tr:hover {
     }
     
     .input-section, .results-section {
+        width: 100%;
+    }
+    
+    /* Responsive Home Page */
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tool-card {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .welcome-text, .video-description {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    .home-container {
+        padding: 20px 15px;
+    }
+    
+    /* Responsive Navbar */
+    .nav-container {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .logo {
+        margin-bottom: 15px;
+    }
+    
+    .menu-items ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .menu-items li {
+        margin: 5px 0;
+        text-align: center;
+    }
+    
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .dropdown:hover .dropdown-content {
+        max-height: 200px;
+    }
+    
+    .search-box {
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    .search-box form {
+        width: 100%;
+    }
+    
+    .search-box input[type="text"] {
         width: 100%;
     }
 }
