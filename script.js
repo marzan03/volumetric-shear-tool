@@ -80,16 +80,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const hc2 = c2 - 2 * clearCover;
         const ag = c1 * c2;
         const ach = hc1 * hc2;
-        const ash1 = 0.827; // constant
-        const ash2 = 0.492; // constant
+        const term1 = (0.3 * tieSpacing * hc1) * ((ag / ach) - 1) * (fc / fy);
+        const term2 = (0.09 * tieSpacing * hc1) * (fc / fy);
+        const Ash1 = Math.max(term1, term2);
+        const term3 = (0.3 * tieSpacing * hc2) * ((ag / ach) - 1) * (fc / fy);
+        const term4 = (0.09 * tieSpacing * hc2) * (fc / fy);
+        const Ash2 = Math.max(term3, term4);
         
         // Display results
         document.getElementById('hc1Result').textContent = hc1.toFixed(2);
         document.getElementById('hc2Result').textContent = hc2.toFixed(2);
         document.getElementById('agResult').textContent = ag.toFixed(2);
         document.getElementById('achResult').textContent = ach.toFixed(2);
-        document.getElementById('ash1Result').textContent = ash1.toFixed(3);
-        document.getElementById('ash2Result').textContent = ash2.toFixed(3);
+        document.getElementById('ash1Result').textContent = Ash1.toFixed(3);
+        document.getElementById('ash2Result').textContent = Ash2.toFixed(3);
+        
         
         // Highlight the results section
         document.querySelector('.results-section').classList.add('active');
