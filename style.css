@@ -467,3 +467,26 @@ tr:hover {
         width: 100%;
     }
 }
+
+/* Fix for navbar on desktop */
+@media (min-width: 769px) {
+    .nav-container {
+        flex-direction: row;
+        height: 60px;
+    }
+    
+    .menu-items ul {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .menu-items li {
+        margin-left: 20px;
+        text-align: left;
+    }
+    
+    .dropdown-content {
+        position: absolute;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+}

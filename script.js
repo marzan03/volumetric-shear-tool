@@ -33,31 +33,50 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile dropdown menu functionality
     const dropdowns = document.querySelectorAll('.dropdown');
     
-    // For mobile devices, make dropdowns toggle on click
-    if (window.innerWidth <= 768) {
-        dropdowns.forEach(dropdown => {
-            const dropdownLink = dropdown.querySelector('a');
-            dropdownLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                const content = this.nextElementSibling;
+    // Function to handle mobile dropdown behavior
+    function setupMobileDropdowns() {
+        if (window.innerWidth <= 768) {
+            // For mobile devices, make dropdowns toggle on click
+            dropdowns.forEach(dropdown => {
+                const dropdownLink = dropdown.querySelector('a');
+                // Remove existing event listeners by cloning and replacing
+                const newDropdownLink = dropdownLink.cloneNode(true);
+                dropdownLink.parentNode.replaceChild(newDropdownLink, dropdownLink);
                 
-                // Close all other dropdowns
-                dropdowns.forEach(otherDropdown => {
-                    if (otherDropdown !== dropdown) {
-                        const otherContent = otherDropdown.querySelector('.dropdown-content');
-                        otherContent.style.maxHeight = null;
+                newDropdownLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const content = this.nextElementSibling;
+                    
+                    // Close all other dropdowns
+                    dropdowns.forEach(otherDropdown => {
+                        if (otherDropdown !== dropdown) {
+                            const otherContent = otherDropdown.querySelector('.dropdown-content');
+                            otherContent.style.maxHeight = null;
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
                     }
                 });
-                
-                // Toggle current dropdown
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
-                } else {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                }
             });
-        });
+        } else {
+            // For desktop, reset dropdown styles
+            dropdowns.forEach(dropdown => {
+                const content = dropdown.querySelector('.dropdown-content');
+                content.style.maxHeight = null;
+            });
+        }
     }
+    
+    // Initial setup
+    setupMobileDropdowns();
+    
+    // Update on window resize
+    window.addEventListener('resize', setupMobileDropdowns);
     
     // Function to perform all calculations
     function performCalculations() {
