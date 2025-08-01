@@ -30,14 +30,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to handle mobile dropdown behavior
     function setupMobileDropdowns() {
-        if (window.innerWidth <= 768) {
-            // For mobile devices, make dropdowns toggle on click
-            dropdowns.forEach(dropdown => {
-                const dropdownLink = dropdown.querySelector('a');
-                // Remove existing event listeners by cloning and replacing
-                const newDropdownLink = dropdownLink.cloneNode(true);
-                dropdownLink.parentNode.replaceChild(newDropdownLink, dropdownLink);
-                
+        const isMobile = window.innerWidth <= 768;
+        
+        // Reset all dropdowns first
+        dropdowns.forEach(dropdown => {
+            const content = dropdown.querySelector('.dropdown-content');
+            content.style.maxHeight = null;
+            
+            // Remove any existing click event listeners by cloning and replacing
+            const dropdownLink = dropdown.querySelector('a');
+            const newDropdownLink = dropdownLink.cloneNode(true);
+            dropdownLink.parentNode.replaceChild(newDropdownLink, dropdownLink);
+            
+            if (isMobile) {
+                // For mobile devices, add click event listeners
                 newDropdownLink.addEventListener('click', function(e) {
                     e.preventDefault();
                     const content = this.nextElementSibling;
@@ -57,14 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         content.style.maxHeight = content.scrollHeight + 'px';
                     }
                 });
-            });
-        } else {
-            // For desktop, reset dropdown styles
-            dropdowns.forEach(dropdown => {
-                const content = dropdown.querySelector('.dropdown-content');
-                content.style.maxHeight = null;
-            });
-        }
+            }
+        });
     }
     
     // Initial setup

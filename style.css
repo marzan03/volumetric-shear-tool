@@ -473,6 +473,7 @@ tr:hover {
     .nav-container {
         flex-direction: row;
         height: 60px;
+        padding: 0 20px;
     }
     
     .menu-items ul {
@@ -488,5 +489,14 @@ tr:hover {
     .dropdown-content {
         position: absolute;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo {
+        margin-bottom: 0;
+    }
+    
+    .search-box {
+        width: auto;
+        margin-top: 0;
     }
 }
