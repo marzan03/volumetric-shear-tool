@@ -24,11 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    // Get the calculate button and add click event listener if it exists
-    const calculateButton = document.getElementById('calculate');
-    if (calculateButton) {
-        calculateButton.addEventListener('click', performCalculations);
-    }
     
     // Mobile dropdown menu functionality
     const dropdowns = document.querySelectorAll('.dropdown');
@@ -78,19 +73,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update on window resize
     window.addEventListener('resize', setupMobileDropdowns);
     
+    // Get the calculate button and add click event listener if it exists
+    const calculateButton = document.getElementById('calculate');
+    if (calculateButton) {
+        calculateButton.addEventListener('click', performCalculations);
+    }
   
     function performCalculations() {
-    const c1 = parseFloat(document.getElementById('c1').value);
-    const c2 = parseFloat(document.getElementById('c2').value);
-    const clearCover = parseFloat(document.getElementById('clearCover').value);
-    const fc = parseFloat(document.getElementById('fc').value);
-    const fy = parseFloat(document.getElementById('fy').value);
-    const tieSpacing = parseFloat(document.getElementById('tieSpacing').value);
+        const c1 = parseFloat(document.getElementById('c1').value);
+        const c2 = parseFloat(document.getElementById('c2').value);
+        const clearCover = parseFloat(document.getElementById('clearCover').value);
+        const fc = parseFloat(document.getElementById('fc').value);
+        const fy = parseFloat(document.getElementById('fy').value);
+        const tieSpacing = parseFloat(document.getElementById('tieSpacing').value);
 
-    if (isNaN(c1) || isNaN(c2) || isNaN(clearCover) || isNaN(fc) || isNaN(fy) || isNaN(tieSpacing)) {
-        alert('Please fill in all fields with valid numbers.');
-        return;
-    }
+        if (isNaN(c1) || isNaN(c2) || isNaN(clearCover) || isNaN(fc) || isNaN(fy) || isNaN(tieSpacing)) {
+            alert('Please fill in all fields with valid numbers.');
+            return;
+        }
 
         const hc1 = c1 - 2 * clearCover;
         const hc2 = c2 - 2 * clearCover;
@@ -111,36 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('achResult').textContent = ach.toFixed(2);
         document.getElementById('ash1Result').textContent = Ash1.toFixed(3);
         document.getElementById('ash2Result').textContent = Ash2.toFixed(3);
-}
-
-        // Add event listener after DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-        const calcBtn = document.getElementById('calculate');
-        if (calcBtn) {
-        calcBtn.addEventListener('click', performCalculations);
-    }
-});
-
-        // Perform calculations
-        const hc1 = c1 - 2 * clearCover;
-        const hc2 = c2 - 2 * clearCover;
-        const ag = c1 * c2;
-        const ach = hc1 * hc2;
-        const term1 = (0.3 * tieSpacing * hc1) * ((ag / ach) - 1) * (fc / fy);
-        const term2 = (0.09 * tieSpacing * hc1) * (fc / fy);
-        const Ash1 = Math.max(term1, term2);
-        const term3 = (0.3 * tieSpacing * hc2) * ((ag / ach) - 1) * (fc / fy);
-        const term4 = (0.09 * tieSpacing * hc2) * (fc / fy);
-        const Ash2 = Math.max(term3, term4);
-        
-        // Display results
-        document.getElementById('hc1Result').textContent = hc1.toFixed(2);
-        document.getElementById('hc2Result').textContent = hc2.toFixed(2);
-        document.getElementById('agResult').textContent = ag.toFixed(2);
-        document.getElementById('achResult').textContent = ach.toFixed(2);
-        document.getElementById('ash1Result').textContent = Ash1.toFixed(3);
-        document.getElementById('ash2Result').textContent = Ash2.toFixed(3);
-        
         
         // Highlight the results section
         document.querySelector('.results-section').classList.add('active');
