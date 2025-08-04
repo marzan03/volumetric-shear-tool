@@ -536,17 +536,93 @@ button:hover {
     margin-bottom: 20px;
 }
 
-.reference-btn {
-    background-color: #95a5a6;
-    color: white;
-    padding: 8px 16px;
-    font-size: 14px;
-    width: auto;
-    margin: 0;
+.reference-icon {
+    position: relative;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
 }
 
-.reference-btn:hover {
-    background-color: #7f8c8d;
+.reference-icon:hover {
+    background-color: rgba(149, 165, 166, 0.1);
+}
+
+.reference-icon svg {
+    transition: all 0.3s ease;
+}
+
+.reference-icon:hover svg {
+    transform: scale(1.1);
+}
+
+.reference-icon:hover svg circle,
+.reference-icon:hover svg path {
+    stroke: #7f8c8d;
+}
+
+/* Tooltip Styles */
+.tooltip {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #2c3e50;
+    color: white;
+    padding: 0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 300px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.reference-icon:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.tooltip-content {
+    padding: 15px;
+}
+
+.tooltip-content h4 {
+    margin: 0 0 10px 0;
+    color: #3498db;
+    font-size: 16px;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 8px;
+}
+
+.tooltip-content p {
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #ecf0f1;
+}
+
+.tooltip-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Arrow for tooltip */
+.tooltip::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #2c3e50;
 }
 
 .generate-report-btn {

@@ -319,10 +319,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // General Input Section
          // Manual coordinates for General Input and Calculations sections
         const generalInputTitleY = 220;    // General Input title position
-        const fcFyY = 240;                  // f'c and fy values position
-        const c1C2Y = 260;                  // C1 and C2 values position
-        const clearCoverY = 280;            // Clear Cover value position
-        const calculationsTitleY = 310;     // Calculations title position
+        const columnIdY = 240;              // Column ID position
+        const fcFyY = 260;                  // f'c and fy values position
+        const c1C2Y = 280;                  // C1 and C2 values position
+        const clearCoverY = 300;            // Clear Cover value position
+        const calculationsTitleY = 330;     // Calculations title position
         
         doc.setFontSize(16);
         doc.setFont('times', 'bold');
@@ -330,9 +331,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         doc.setFontSize(12);
         doc.setFont('times', 'normal');
+        doc.text(`Column ID: ${columnId}`, 80, columnIdY, { align: 'left' });
         doc.text(`f'c = ${fc} ksi, fy = ${fy} ksi`, 80, fcFyY, { align: 'left' });
         doc.text(`C1 = ${c1} in, C2 = ${c2} in`, 80, c1C2Y, { align: 'left' });
-        doc.text(`Clear Cover, h = ${clearCover} ft`, 80, clearCoverY, { align: 'left' });
+        doc.text(`Clear Cover, = ${clearCover} in`, 80, clearCoverY, { align: 'left' });
         
         // Add Engineering Calculations Section
         doc.setFontSize(16);
@@ -371,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Coordinates for clean serial layout
         const leftMargin = 40;
-        let currentY = 340;  // Start after Calculations title
+        let currentY = 360;  // Start after Calculations title
         const lineSpacing = 20;
         
         // Long Direction Title
