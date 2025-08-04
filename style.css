@@ -551,17 +551,15 @@ button:hover {
     background-color: rgba(149, 165, 166, 0.1);
 }
 
-.reference-icon svg {
+.info-icon {
+    font-size: 20px;
     transition: all 0.3s ease;
+    user-select: none;
 }
 
-.reference-icon:hover svg {
+.reference-icon:hover .info-icon {
     transform: scale(1.1);
-}
-
-.reference-icon:hover svg circle,
-.reference-icon:hover svg path {
-    stroke: #7f8c8d;
+    filter: brightness(1.2);
 }
 
 /* Tooltip Styles */
