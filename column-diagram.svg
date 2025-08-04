@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <!-- Column outline -->
+  <rect x="75" y="50" width="150" height="200" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+  
+  <!-- Core area -->
+  <rect x="95" y="70" width="110" height="160" fill="#e6e6e6" stroke="#666" stroke-dasharray="5,3" stroke-width="1"/>
+  
+  <!-- Dimension lines and labels -->
+  <!-- C1 dimension -->
+  <line x1="75" y1="30" x2="225" y2="30" stroke="#333" stroke-width="1"/>
+  <line x1="75" y1="25" x2="75" y2="35" stroke="#333" stroke-width="1"/>
+  <line x1="225" y1="25" x2="225" y2="35" stroke="#333" stroke-width="1"/>
+  <text x="150" y="25" text-anchor="middle" font-family="Arial" font-size="12">C1</text>
+  
+  <!-- C2 dimension -->
+  <line x1="55" y1="50" x2="55" y2="250" stroke="#333" stroke-width="1"/>
+  <line x1="50" y1="50" x2="60" y2="50" stroke="#333" stroke-width="1"/>
+  <line x1="50" y1="250" x2="60" y2="250" stroke="#333" stroke-width="1"/>
+  <text x="40" y="150" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(270,40,150)">C2</text>
+  
+  <!-- hc1 dimension -->
+  <line x1="95" y1="260" x2="205" y2="260" stroke="#666" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="95" y1="255" x2="95" y2="265" stroke="#666" stroke-width="1"/>
+  <line x1="205" y1="255" x2="205" y2="265" stroke="#666" stroke-width="1"/>
+  <text x="150" y="275" text-anchor="middle" font-family="Arial" font-size="12">hc1</text>
+  
+  <!-- hc2 dimension -->
+  <line x1="245" y1="70" x2="245" y2="230" stroke="#666" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="240" y1="70" x2="250" y2="70" stroke="#666" stroke-width="1"/>
+  <line x1="240" y1="230" x2="250" y2="230" stroke="#666" stroke-width="1"/>
+  <text x="260" y="150" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(270,260,150)">hc2</text>
+  
+  <!-- Clear cover annotation -->
+  <line x1="75" y1="70" x2="95" y2="70" stroke="#ff6666" stroke-width="1"/>
+  <text x="85" y="65" text-anchor="middle" font-family="Arial" font-size="10" fill="#ff6666">cover</text>
+  
+  <!-- Ties representation -->
+  <circle cx="95" cy="70" r="3" fill="#333"/>
+  <circle cx="95" cy="230" r="3" fill="#333"/>
+  <circle cx="205" cy="70" r="3" fill="#333"/>
+  <circle cx="205" cy="230" r="3" fill="#333"/>
+  
+  <!-- Title -->
+  <text x="150" y="290" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold">Column Cross-Section</text>
+</svg>

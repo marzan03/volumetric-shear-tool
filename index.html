@@ -52,36 +52,73 @@
         
         <div class="calculator">
             <div class="input-section">
-                <h2>Input Parameters</h2>
-                <div class="form-group">
-                    <label for="c1">C1 (inches):</label>
-                    <input type="number" id="c1" step="0.01" required>
+                <h2>Input parameters:</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="columnId">Column Id</label>
+                        <input type="text" id="columnId" value="C1 12X25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tieBar">Tie Bar (mm)</label>
+                        <input type="number" id="tieBar" value="10" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="c1">C1 (inch)</label>
+                        <input type="number" id="c1" value="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="longDirection">Long Direction (no of Leg Provided)</label>
+                        <input type="number" id="longDirection" value="4" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="c2">C2 (inch)</label>
+                        <input type="number" id="c2" value="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shortDirection">Short Direction (no of Leg Provided)</label>
+                        <input type="number" id="shortDirection" value="3" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="c2">C2 (inches):</label>
-                    <input type="number" id="c2" step="0.01" required>
+                    <label for="clearCover">Clear Cover (inch)</label>
+                    <input type="number" id="clearCover" value="1.5" required>
                 </div>
                 <div class="form-group">
-                    <label for="clearCover">Clear Cover (inches):</label>
-                    <input type="number" id="clearCover" step="0.01" required>
+                    <label for="fc">f'c (ksi)</label>
+                    <input type="number" id="fc" value="4" required>
                 </div>
                 <div class="form-group">
-                    <label for="fc">f'c (ksi):</label>
-                    <input type="number" id="fc" step="0.01" required>
+                    <label for="fy">fy (ksi)</label>
+                    <input type="number" id="fy" value="60" required>
                 </div>
-                <div class="form-group">
-                    <label for="fy">f_y (ksi):</label>
-                    <input type="number" id="fy" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="tieSpacing">Tie Spacing (inches):</label>
-                    <input type="number" id="tieSpacing" step="0.01" required>
+                <div class="form-group-with-diagram">
+                    <div class="form-group">
+                        <label for="tieSpacing">Tie Spacing S₀ (inch)</label>
+                        <input type="number" id="tieSpacing" value="5" required>
+                    </div>
+                    <div class="cross-section-container">
+                        <img src="cross-section.svg" alt="Cross-Section Diagram" class="cross-section-diagram">
+                    </div>
                 </div>
                 <button id="calculate">Calculate</button>
             </div>
             
+            <div class="middle-section">
+                <div class="diagram-container">
+                    <img src="long-section.jpg" alt="Long Section Diagram" class="column-diagram">
+                </div>
+
+            </div>
+            
             <div class="results-section">
-                <h2>Results</h2>
+                <div class="results-header">
+                    <h2>Results:</h2>
+                    <button class="reference-btn">Reference</button>
+                </div>
                 <table id="resultsTable">
                     <thead>
                         <tr>
@@ -92,37 +129,70 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>hc1</td>
+                            <td>h<sub>c1</sub></td>
                             <td id="hc1Result">-</td>
-                            <td>inches</td>
+                            <td>in</td>
                         </tr>
                         <tr>
-                            <td>hc2</td>
+                            <td>h<sub>c2</sub></td>
                             <td id="hc2Result">-</td>
-                            <td>inches</td>
+                            <td>in</td>
                         </tr>
                         <tr>
-                            <td>Ag</td>
+                            <td>A<sub>g</sub></td>
                             <td id="agResult">-</td>
                             <td>in²</td>
                         </tr>
                         <tr>
-                            <td>Ach</td>
+                            <td>A<sub>ch</sub></td>
                             <td id="achResult">-</td>
                             <td>in²</td>
                         </tr>
                         <tr>
-                            <td>Ash1</td>
-                            <td id="ash1Result">-</td>
+                            <td>A<sub>sh1 (required)</sub></td>
+                            <td id="ash1RequiredResult">-</td>
                             <td>in²</td>
                         </tr>
                         <tr>
-                            <td>Ash2</td>
-                            <td id="ash2Result">-</td>
+                            <td>A<sub>sh2 (required)</sub></td>
+                            <td id="ash2RequiredResult">-</td>
                             <td>in²</td>
+                        </tr>
+                        <tr>
+                            <td>A<sub>sh1 (Provided)</sub></td>
+                            <td id="ash1ProvidedResult">-</td>
+                            <td>in²</td>
+                            <td id="ash1Status">-</td>
+                        </tr>
+                        <tr>
+                            <td>A<sub>sh2 (Provided)</sub></td>
+                            <td id="ash2ProvidedResult">-</td>
+                            <td>in²</td>
+                            <td id="ash2Status">-</td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="long-section-container">
+
+                </div>
+                <button class="generate-report-btn" id="generateReportBtn">Generate Report</button>
+                
+                <!-- Step-by-step calculations display -->
+                <div id="calculationsContainer" style="display: none; margin: 20px 0;">
+                    <h3>Engineering Calculations</h3>
+                    <div id="calculationsContent" class="calculations-content"></div>
+                </div>
+                
+                <div id="pdfPreviewContainer" style="display: none; margin: 20px 0; text-align: center;">
+                    <h3>PDF Preview</h3>
+                    <div style="margin-bottom: 10px;">
+                        <button id="enableLivePreview" class="reference-btn">Enable Live Preview</button>
+                        <button id="refreshPreview" class="reference-btn" style="margin-left: 10px;">Refresh Preview</button>
+                        <span id="livePreviewStatus" style="margin-left: 10px; color: #666;"></span>
+                    </div>
+                    <iframe id="pdfPreview" style="width: 100%; height: 600px; border: 1px solid #ccc;"></iframe>
+                </div>
+                <button class="download-btn" id="downloadBtn" style="display: none;">Download PDF</button>
             </div>
         </div>
     </div>
@@ -133,6 +203,20 @@
         </div>
     </footer>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- MathJax for rendering mathematical equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
