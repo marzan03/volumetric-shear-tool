@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrucVision | Tools - Base Shear Calculation (BNBC 2020)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="home.html">StrucVision</a>
+            </div>
+            <div class="menu-items">
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Structural</a>
+                            <a href="#">Geotechnical</a>
+                            <a href="#">Transportation</a>
+                            <a href="#">Environmental</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Post</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li class="dropdown">
+                        <a href="#">Tools <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="index.html">Volumetric Shear Reinforcement</a>
+                            <a href="base-shear.html" class="active">Base Shear Calculation</a>
+                            <a href="#">Beam Design</a>
+                            <a href="#">Column Design</a>
+                            <a href="#">Unit Converter</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-box">
+                <form action="#" method="get">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Base Shear Calculation (BNBC 2020)</h1>
+        
+        <div class="calculator">
+            <div class="input-section">
+                <h2>Input parameters:</h2>
+                <div class="form-group">
+                    <label for="buildingId">Building Id</label>
+                    <input type="text" id="buildingId" value="Building-01" required>
+                </div>
+                <div class="form-group">
+                    <label for="siteClass">Site Class</label>
+                    <select id="siteClass" required>
+                        <option value="SB">SB</option>
+                        <option value="SC" selected>SC</option>
+                        <option value="SD">SD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="seismicZone">Seismic Zone (Town/City):</label>
+                    <select id="seismicZone" required>
+                        <option value="">Select Town/City</option>
+                        <option value="Bagerhat" data-z="0.12">Bagerhat (Z=0.12)</option>
+                        <option value="Bandarban" data-z="0.28">Bandarban (Z=0.28)</option>
+                        <option value="Barguna" data-z="0.12">Barguna (Z=0.12)</option>
+                        <option value="Barisal" data-z="0.12">Barisal (Z=0.12)</option>
+                        <option value="Bhola" data-z="0.12">Bhola (Z=0.12)</option>
+                        <option value="Bogra" data-z="0.20">Bogra (Z=0.20)</option>
+                        <option value="Brahmanbaria" data-z="0.28">Brahmanbaria (Z=0.28)</option>
+                        <option value="Chandpur" data-z="0.20">Chandpur (Z=0.20)</option>
+                        <option value="Chapainawabganj" data-z="0.12">Chapainawabganj (Z=0.12)</option>
+                        <option value="Chittagong" data-z="0.28">Chittagong (Z=0.28)</option>
+                        <option value="Chuadanga" data-z="0.12">Chuadanga (Z=0.12)</option>
+                        <option value="Comilla" data-z="0.20">Comilla (Z=0.20)</option>
+                        <option value="Cox's Bazar" data-z="0.28">Cox's Bazar (Z=0.28)</option>
+                        <option value="Dhaka" data-z="0.20" selected>Dhaka (Z=0.20)</option>
+                        <option value="Dinajpur" data-z="0.20">Dinajpur (Z=0.20)</option>
+                        <option value="Faridpur" data-z="0.20">Faridpur (Z=0.20)</option>
+                        <option value="Feni" data-z="0.20">Feni (Z=0.20)</option>
+                        <option value="Gaibandha" data-z="0.28">Gaibandha (Z=0.28)</option>
+                        <option value="Gazipur" data-z="0.20">Gazipur (Z=0.20)</option>
+                        <option value="Gopalganj" data-z="0.12">Gopalganj (Z=0.12)</option>
+                        <option value="Habiganj" data-z="0.36">Habiganj (Z=0.36)</option>
+                        <option value="Jaipurhat" data-z="0.20">Jaipurhat (Z=0.20)</option>
+                        <option value="Jamalpur" data-z="0.36">Jamalpur (Z=0.36)</option>
+                        <option value="Jessore" data-z="0.12">Jessore (Z=0.12)</option>
+                        <option value="Jhalakati" data-z="0.12">Jhalakati (Z=0.12)</option>
+                        <option value="Jhenaidah" data-z="0.12">Jhenaidah (Z=0.12)</option>
+                        <option value="Khagrachhari" data-z="0.28">Khagrachhari (Z=0.28)</option>
+                        <option value="Khulna" data-z="0.12">Khulna (Z=0.12)</option>
+                        <option value="Kishoreganj" data-z="0.36">Kishoreganj (Z=0.36)</option>
+                        <option value="Kurigram" data-z="0.36">Kurigram (Z=0.36)</option>
+                        <option value="Kushtia" data-z="0.20">Kushtia (Z=0.20)</option>
+                        <option value="Lakshmipur" data-z="0.20">Lakshmipur (Z=0.20)</option>
+                        <option value="Lalmonirhat" data-z="0.28">Lalmonirhat (Z=0.28)</option>
+                        <option value="Madaripur" data-z="0.20">Madaripur (Z=0.20)</option>
+                        <option value="Magura" data-z="0.12">Magura (Z=0.12)</option>
+                        <option value="Manikganj" data-z="0.20">Manikganj (Z=0.20)</option>
+                        <option value="Maulvibazar" data-z="0.36">Maulvibazar (Z=0.36)</option>
+                        <option value="Meherpur" data-z="0.12">Meherpur (Z=0.12)</option>
+                        <option value="Mongla" data-z="0.12">Mongla (Z=0.12)</option>
+                        <option value="Munshiganj" data-z="0.20">Munshiganj (Z=0.20)</option>
+                        <option value="Mymensingh" data-z="0.36">Mymensingh (Z=0.36)</option>
+                        <option value="Narail" data-z="0.12">Narail (Z=0.12)</option>
+                        <option value="Narayanganj" data-z="0.20">Narayanganj (Z=0.20)</option>
+                        <option value="Narsingdi" data-z="0.28">Narsingdi (Z=0.28)</option>
+                        <option value="Natore" data-z="0.20">Natore (Z=0.20)</option>
+                        <option value="Naogaon" data-z="0.20">Naogaon (Z=0.20)</option>
+                        <option value="Netrakona" data-z="0.36">Netrakona (Z=0.36)</option>
+                        <option value="Nilphamari" data-z="0.12">Nilphamari (Z=0.12)</option>
+                        <option value="Noakhali" data-z="0.20">Noakhali (Z=0.20)</option>
+                        <option value="Pabna" data-z="0.20">Pabna (Z=0.20)</option>
+                        <option value="Panchagarh" data-z="0.20">Panchagarh (Z=0.20)</option>
+                        <option value="Patuakhali" data-z="0.12">Patuakhali (Z=0.12)</option>
+                        <option value="Pirojpur" data-z="0.12">Pirojpur (Z=0.12)</option>
+                        <option value="Rajbari" data-z="0.20">Rajbari (Z=0.20)</option>
+                        <option value="Rajshahi" data-z="0.12">Rajshahi (Z=0.12)</option>
+                        <option value="Rangamati" data-z="0.28">Rangamati (Z=0.28)</option>
+                        <option value="Rangpur" data-z="0.28">Rangpur (Z=0.28)</option>
+                        <option value="Satkhira" data-z="0.12">Satkhira (Z=0.12)</option>
+                        <option value="Shariatpur" data-z="0.20">Shariatpur (Z=0.20)</option>
+                        <option value="Sherpur" data-z="0.36">Sherpur (Z=0.36)</option>
+                        <option value="Sirajganj" data-z="0.28">Sirajganj (Z=0.28)</option>
+                        <option value="Sunamganj" data-z="0.36">Sunamganj (Z=0.36)</option>
+                        <option value="Sylhet" data-z="0.36">Sylhet (Z=0.36)</option>
+                        <option value="Tangail" data-z="0.28">Tangail (Z=0.28)</option>
+                        <option value="Thakurgaon" data-z="0.20">Thakurgaon (Z=0.20)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="occupancyCategory">Occupancy Category</label>
+                    <select id="occupancyCategory" required>
+                        <option value="I">I - Agricultural, Storage</option>
+                        <option value="II" selected>II - Residential, Commercial</option>
+                        <option value="III">III - Assembly, Educational</option>
+                        <option value="IV">IV - Essential Facilities</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lateralForceCategory">Seismic Force–Resisting System Category</label>
+                    <select id="lateralForceCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="bearing_wall">A. BEARING WALL SYSTEMS (no frame)</option>
+                        <option value="building_frame">B. BUILDING FRAME SYSTEMS (with bracing or shear wall)</option>
+                        <option value="moment_frame" selected>C. MOMENT RESISTING FRAME SYSTEMS (no shear wall)</option>
+                        <option value="dual_systems">D. DUAL SYSTEMS: SPECIAL MOMENT FRAMES CAPABLE OF RESISTING AT LEAST 25% OF PRESCRIBED SEISMIC FORCES (with bracing or shear wall)</option>
+                        <option value="dual_intermediate">E. DUAL SYSTEMS: INTERMEDIATE MOMENT FRAMES CAPABLE OF RESISTING AT LEAST 25% OF PRESCRIBED SEISMIC FORCES (with bracing or shear wall)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lateralForceSystem">Seismic Force–Resisting System Type</label>
+                    <select id="lateralForceSystem" required disabled>
+                        <option value="">Select Category First</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="structureType">Structure Type</label>
+                    <select id="structureType" required>
+                        <option value="concrete_moment" selected>Concrete moment-resisting frames</option>
+                        <option value="steel_moment">Steel moment-resisting frames</option>
+                        <option value="eccentrically_braced">Eccentrically braced steel frame</option>
+                        <option value="all_other">All other structural systems</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="buildingHeight">Building Height (m)</label>
+                    <input type="number" id="buildingHeight" value="25" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="seismicWeight">Seismic Weight (kN)</label>
+                    <input type="number" id="seismicWeight" value="15000" step="100" required>
+                </div>
+                <button id="calculate">Calculate Base Shear</button>
+            </div>
+            
+            <div class="middle-section">
+                <div class="diagram-container">
+                    <img src="Seismic Zone.jpg" alt="Bangladesh Seismic Zones" class="column-diagram">
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <div class="results-header">
+                    <h2>Results:</h2>
+                    <div class="reference-icon" id="referenceIcon">
+                        <span class="info-icon">ℹ️</span>
+                        <div class="tooltip" id="referenceTooltip">
+                            <div class="tooltip-content">
+                                <h4>Reference Information</h4>
+                                <p>BNBC 2020 - Bangladesh National Building Code</p>
+                                <p>Part: 6 Chapter: 2</p>
+                                <p>Section(2.4.2): Equivalent Lateral Force Procedure</p>
+                                <p>Page: 3-15 to 3-20</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Importance Factor (I)</td>
+                            <td id="importance-factor-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Seismic Design Category (SDC)</td>
+                            <td id="seismic-design-category-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Soil Factor (S)</td>
+                            <td id="soil-factor-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>T<sub>B</sub> (s)</td>
+                            <td id="tb-result">-</td>
+                            <td>sec</td>
+                        </tr>
+                        <tr>
+                            <td>T<sub>C</sub> (s)</td>
+                            <td id="tc-result">-</td>
+                            <td>sec</td>
+                        </tr>
+                        <tr>
+                            <td>T<sub>D</sub> (s)</td>
+                            <td id="td-result">-</td>
+                            <td>sec</td>
+                        </tr>
+                        <tr>
+                            <td>Height Limit (m)</td>
+                            <td id="height-limit-result">-</td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Response Reduction Factor (R)</td>
+                            <td id="response-reduction-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Overstrength Factor (Ω<sub>0</sub>)</td>
+                            <td id="overstrength-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Deflection Amplification (C<sub>d</sub>)</td>
+                            <td id="deflection-amplification-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>C<sub>t</sub></td>
+                            <td id="ct-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td id="m-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Building Period, T</td>
+                            <td id="time-period-result">-</td>
+                            <td>sec</td>
+                        </tr>
+                        <tr>
+                            <td>Normalized Acceleration Response Spectrum (C<sub>s</sub>)</td>
+                            <td id="cs-result">-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Design Spectra Acceleration (S<sub>a</sub>)</td>
+                            <td id="sa-result">-</td>
+                            <td>g</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Seismic Base Shear (V)</strong></td>
+                            <td id="base-shear-result"><strong>-</strong></td>
+                            <td><strong>kN</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <button class="generate-report-btn" id="generateReportBtn">Generate Report</button>
+                
+
+                
+                <div id="pdfPreviewContainer" style="display: none; margin: 20px 0; text-align: center;">
+                    <h3>PDF Preview</h3>
+                    <div style="margin-bottom: 10px;">
+                        <button id="enableLivePreview" class="reference-btn">Enable Live Preview</button>
+                        <button id="refreshPreview" class="reference-btn" style="margin-left: 10px;">Refresh Preview</button>
+                        <span id="livePreviewStatus" style="margin-left: 10px; color: #666;"></span>
+                    </div>
+                    <iframe id="pdfPreview" style="width: 120%; height: 700px; border: 1px solid #ccc; max-width: 1200px;"></iframe>
+                </div>
+                <button class="download-btn" id="downloadBtn" style="display: none;">Download PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2023 StrucVision. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- MathJax for rendering mathematical equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="base-shear-script.js"></script>
+</body>
+</html>
