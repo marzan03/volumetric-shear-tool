@@ -255,7 +255,9 @@ body {
     border-left: 3px solid #3498db;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content,
+.dropdown.active .dropdown-content {
     display: block;
 }
 

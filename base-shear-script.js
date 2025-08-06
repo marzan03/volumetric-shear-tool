@@ -10,9 +10,15 @@ menuLinks.forEach(link => {
 // Mobile dropdown menu functionality
 const dropdowns = document.querySelectorAll('.dropdown');
 dropdowns.forEach(dropdown => {
-    dropdown.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.toggle('active');
+    const dropdownToggle = dropdown.querySelector('a');
+    const dropdownContent = dropdown.querySelector('.dropdown-content');
+    
+    dropdownToggle.addEventListener('click', function(e) {
+        // Only prevent default for the main dropdown toggle, not the content links
+        if (e.target === this) {
+            e.preventDefault();
+            dropdown.classList.toggle('active');
+        }
     });
 });
 
