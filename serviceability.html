@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviceability Check | StrucVision</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="home.html">StrucVision</a>
+            </div>
+            <div class="menu-items">
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Structural</a>
+                            <a href="#">Geotechnical</a>
+                            <a href="#">Transportation</a>
+                            <a href="#">Environmental</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Post</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li class="dropdown">
+                        <a href="#">Tools <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="index.html">Volumetric Shear Reinforcement</a>
+                            <a href="base-shear.html">Base Shear Calculation</a>
+                            <a href="serviceability.html">Serviceability Check</a>
+                            <a href="#">Beam Design</a>
+                            <a href="#">Column Design</a>
+                            <a href="#">Unit Converter</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-box">
+                <form action="#" method="get">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tool-tabs">
+            <button class="tab-btn active" onclick="switchTab('lateral-wind')">Lateral Displacement (Wind)</button>
+            <button class="tab-btn" onclick="switchTab('story-wind')">Story Drift (wind)</button>
+            <button class="tab-btn" onclick="switchTab('lateral-eq')">Lateral Displacement (EQ)</button>
+            <button class="tab-btn" onclick="switchTab('story-eq')">Story Drift (EQ)</button>
+        </div>
+        
+        <div class="tool-header">
+            <h1><i class="fas fa-check-circle"></i> Serviceability Check</h1>
+            <p>Comprehensive serviceability analysis for wind and seismic forces</p>
+        </div>
+        
+        <!-- Lateral Displacement (Wind) Tab Content -->
+        <div id="lateral-wind" class="tab-content active">
+            <div class="input-section">
+                <h2><i class="fas fa-wind"></i> Lateral Displacement for Wind</h2>
+                <p>Analyze maximum displacement for wind forces with automatic allowable displacement calculation</p>
+                
+                <div class="data-input-container">
+                    <!-- Manual Input Method -->
+                    <div id="manualInput" class="input-method active">
+                        <div class="manual-input-controls">
+                            <div class="row-controls">
+                                <label for="rowCount">Number of Rows:</label>
+                                <input type="number" id="rowCount" min="1" max="50" value="11" onchange="adjustTableRows()">
+                                <button onclick="addSingleRow()" class="control-btn add-btn">
+                                    <i class="fas fa-plus"></i> Add Row
+                                </button>
+                                <button onclick="removeLastRow()" class="control-btn remove-btn">
+                                    <i class="fas fa-minus"></i> Remove Row
+                                </button>
+                            </div>
+                            <div class="action-controls">
+                                <button onclick="clearTable()" class="control-btn clear-btn">
+                                    <i class="fas fa-eraser"></i> Clear All Data
+                                </button>
+                                <button onclick="fillSampleData()" class="control-btn process-btn">
+                                    <i class="fas fa-clipboard"></i> Load Sample Data
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Story</th>
+                                        <th>Elevation (ft)</th>
+                                        <th>Location</th>
+                                        <th>X-Dir (in)</th>
+                                        <th>Y-Dir (in)</th>
+                                        <th>Allowable (in)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTableBody">
+                                    <!-- Table rows will be generated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculation-controls">
+                    <button onclick="calculateResults()" class="calculate-btn">
+                        <i class="fas fa-calculator"></i> Analyze Displacement
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+                
+                <!-- Results Summary -->
+                <div id="resultsSummary" class="results-summary">
+                    <!-- Summary will be populated by JavaScript -->
+                </div>
+                
+                <div class="results-table">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Story</th>
+                                <th>Elevation (ft)</th>
+                                <th>Location</th>
+                                <th>X-Dir (in)</th>
+                                <th>X-Dir Status</th>
+                                <th>Y-Dir (in)</th>
+                                <th>Y-Dir Status</th>
+                                <th>Allowable (in)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Results will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Chart Container -->
+                <div class="chart-container" style="margin: 20px 0;">
+                    <canvas id="displacementChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="pdf-controls">
+                    <button onclick="generatePDF()" class="pdf-btn">
+                        <i class="fas fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                </div>
+                
+                <!-- PDF Preview Container -->
+                <div id="pdfPreviewContainer" class="pdf-preview-container" style="display: none; margin-top: 20px;">
+                    <!-- PDF preview will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Story Drift (Wind) Tab Content -->
+        <div id="story-wind" class="tab-content">
+            <div class="input-section">
+                <h2><i class="fas fa-wind"></i> Story Drift for Wind</h2>
+                <p>Analyze story drift for wind forces</p>
+                <div class="placeholder-content">
+                    <p><i class="fas fa-tools"></i> This section is under development</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lateral Displacement (EQ) Tab Content -->
+        <div id="lateral-eq" class="tab-content">
+            <div class="input-section">
+                <h2><i class="fas fa-wave-square"></i> Lateral Displacement for Earthquake</h2>
+                <p>Analyze maximum displacement for seismic forces</p>
+                <div class="placeholder-content">
+                    <p><i class="fas fa-tools"></i> This section is under development</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Story Drift (EQ) Tab Content -->
+        <div id="story-eq" class="tab-content">
+            <div class="input-section">
+                <h2><i class="fas fa-wave-square"></i> Story Drift for Earthquake</h2>
+                <p>Analyze story drift for seismic forces</p>
+                <div class="placeholder-content">
+                    <p><i class="fas fa-tools"></i> This section is under development</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="wind-displacement-script.js"></script>
+    <script>
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab button
+            event.target.classList.add('active');
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for wind-displacement-script.js to load, then initialize table
+            setTimeout(function() {
+                if (typeof adjustTableRows === 'function') {
+                    adjustTableRows(11);
+                    // Load sample data
+                    if (typeof fillSampleData === 'function') {
+                        fillSampleData();
+                    }
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
