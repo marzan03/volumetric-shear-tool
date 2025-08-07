@@ -228,16 +228,17 @@ document.addEventListener('DOMContentLoaded', function() {
     async function generatePDF() {
         console.log('Generate PDF button clicked');
     
-    // Check if jsPDF is available
-    if (!window.jspdf) {
-        alert('PDF library not loaded. Please refresh the page and try again.');
-        return;
-    }
+        // Check if jsPDF is available
+        if (!window.jspdf) {
+            alert('PDF library not loaded. Please refresh the page and try again.');
+            return;
+        }
     
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'pt', 'a4');
-    
-    console.log('jsPDF initialized successfully');
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4');
+        
+            console.log('jsPDF initialized successfully');
         
         // Get input values
         const columnId = document.getElementById('columnId').value || '-';
