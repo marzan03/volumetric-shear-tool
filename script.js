@@ -464,8 +464,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const pdfBlob = doc.output('blob');
         const pdfUrl = URL.createObjectURL(pdfBlob);
         
-        // Check if device is mobile
-        const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Check if device is mobile (improved detection)
+        const isMobile = window.innerWidth <= 768 || 
+                        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                        ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0) ||
+                        (navigator.msMaxTouchPoints > 0);
+        
+        console.log('Mobile detection:', isMobile, 'Screen width:', window.innerWidth, 'User agent:', navigator.userAgent);
         
         // Show PDF preview
         const previewContainer = document.getElementById('pdfPreviewContainer');
