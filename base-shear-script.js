@@ -780,10 +780,26 @@ function generatePDFPreview() {
     const pdfBlob = doc.output('blob');
     const pdfUrl = URL.createObjectURL(pdfBlob);
     
-    // Show PDF preview in iframe
+    // Check if device is mobile
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // Show PDF preview
+    const previewContainer = document.getElementById('pdfPreviewContainer');
     const previewIframe = document.getElementById('pdfPreview');
-    if (previewIframe) {
-        previewIframe.src = pdfUrl;
+    
+    if (previewContainer && previewIframe) {
+        if (isMobile) {
+            // For mobile devices, show a message and direct download option
+            previewContainer.innerHTML = `
+                <h3>PDF Report Generated</h3>
+                <p style="margin: 15px 0; color: #666; font-size: 14px;">PDF preview is not fully supported on mobile devices. Please download the PDF to view it.</p>
+                <button class="download-btn" onclick="downloadPDF()" style="display: inline-block; margin: 10px 0;">Download PDF Report</button>
+                <p style="margin: 10px 0; font-size: 12px; color: #888;">Tip: After downloading, you can open the PDF with your device's PDF viewer app.</p>
+            `;
+        } else {
+            // For desktop devices, show iframe preview
+            previewIframe.src = pdfUrl;
+        }
     }
     
     // Store the PDF for download
@@ -796,4 +812,20 @@ function generatePDFPreview() {
     
     // Store current PDF URL for cleanup
     window.currentPdfUrl = pdfUrl;
+}
+
+// Global downloadPDF function for mobile and desktop use
+window.downloadPDF = function() {
+    if (window.generatedPDF) {
+        try {
+            const fileName = `Base_Shear_Report_${window.calculationData.inputs.buildingId.replace(/\s+/g, '_') || 'Report'}.pdf`;
+            window.generatedPDF.save(fileName);
+            console.log('PDF download initiated successfully');
+        } catch (error) {
+            console.error('Error downloading PDF:', error);
+            alert('Error downloading PDF. Please try again.');
+        }
+    } else {
+        alert('Please generate a PDF report first.');
+    }
 }

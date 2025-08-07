@@ -463,11 +463,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const pdfBlob = doc.output('blob');
         const pdfUrl = URL.createObjectURL(pdfBlob);
         
+        // Check if device is mobile
+        const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
         // Show PDF preview
         const previewContainer = document.getElementById('pdfPreviewContainer');
         const previewIframe = document.getElementById('pdfPreview');
+        
         if (previewContainer && previewIframe) {
-            previewIframe.src = pdfUrl;
+            if (isMobile) {
+                // For mobile devices, show a message and direct download option
+                previewContainer.innerHTML = `
+                    <h3>PDF Report Generated</h3>
+                    <p style="margin: 15px 0; color: #666; font-size: 14px;">PDF preview is not fully supported on mobile devices. Please download the PDF to view it.</p>
+                    <button class="download-btn" onclick="downloadPDF()" style="display: inline-block; margin: 10px 0;">Download PDF Report</button>
+                    <p style="margin: 10px 0; font-size: 12px; color: #888;">Tip: After downloading, you can open the PDF with your device's PDF viewer app.</p>
+                `;
+            } else {
+                // For desktop devices, show iframe preview
+                previewIframe.src = pdfUrl;
+            }
             previewContainer.style.display = 'block';
         }
         
@@ -488,19 +503,30 @@ document.addEventListener('DOMContentLoaded', function() {
         if (downloadBtn) {
             downloadBtn.style.display = 'inline-block';
             downloadBtn.onclick = function() {
-                if (window.generatedPDF) {
-                    try {
-                        window.generatedPDF.save(window.pdfFileName);
-                        console.log('PDF download initiated successfully');
-                    } catch (error) {
-                        console.error('Error downloading PDF:', error);
-                        alert('Error downloading PDF. Please try again.');
-                    }
-                }
+                downloadPDF();
             };
         }
         
         console.log('PDF generated successfully and ready for download');
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF. Please check your inputs and try again.');
+    }
+}
+
+// Global downloadPDF function for mobile and desktop use
+window.downloadPDF = function() {
+    if (window.generatedPDF) {
+        try {
+            window.generatedPDF.save(window.pdfFileName);
+            console.log('PDF download initiated successfully');
+        } catch (error) {
+            console.error('Error downloading PDF:', error);
+            alert('Error downloading PDF. Please try again.');
+        }
+    } else {
+        alert('Please generate a PDF report first.');
+    }
 }
 
     // Live Preview functionality

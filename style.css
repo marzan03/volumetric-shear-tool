@@ -719,6 +719,25 @@ button:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
+/* Mobile-specific PDF preview styles */
+@media (max-width: 768px) {
+    #pdfPreviewContainer {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    #pdfPreview {
+        width: 100% !important;
+        height: 500px !important;
+        max-width: 100% !important;
+    }
+    
+    #pdfPreviewContainer h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+}
+
 .download-btn {
     background-color: #27ae60;
     color: white;
