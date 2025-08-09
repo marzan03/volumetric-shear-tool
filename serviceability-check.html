@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrucVision | Tools - Serviceability Check</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google tag (gtag.js) -->
+    <script>
+        // Only load Google Analytics if not on localhost or development environment
+        if (location.hostname !== 'localhost' && 
+            location.hostname !== '127.0.0.1' && 
+            !location.hostname.startsWith('192.168.') &&
+            !location.hostname.startsWith('10.') &&
+            location.protocol !== 'file:') {
+            
+            // Load gtag script
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-1ZDCYWF030';
+            document.head.appendChild(script);
+            
+            // Initialize Google Analytics
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1ZDCYWF030');
+        } else {
+            console.log('Google Analytics disabled for localhost/development environment');
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="home.html">StrucVision</a>
+            </div>
+            <div class="menu-items">
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Categories <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#">Structural</a>
+                            <a href="#">Geotechnical</a>
+                            <a href="#">Transportation</a>
+                            <a href="#">Environmental</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Post</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li class="dropdown">
+                        <a href="#">Tools <i class="fas fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="index.html">Volumetric Shear Reinforcement</a>
+                            <a href="base-shear.html">Base Shear Calculation</a>
+                            <a href="serviceability.html">Serviceability Check</a>
+                            <a href="serviceability-check.html" class="active">Serviceability Check</a>
+                            <a href="#">Beam Design</a>
+                            <a href="#">Column Design</a>
+                            <a href="#">Unit Converter</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-box">
+                <form action="#" method="get">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tool-tabs">
+            <button class="tab-btn active" onclick="switchTab('lateral-wind')">Lateral Displacement (Wind)</button>
+            <button class="tab-btn" onclick="switchTab('story-wind')">Story Drift (wind)</button>
+            <button class="tab-btn" onclick="switchTab('lateral-eq')">Lateral Displacement (EQ)</button>
+            <button class="tab-btn" onclick="switchTab('story-eq')">Story Drift (EQ)</button>
+        </div>
+        
+        <!-- Lateral Displacement (Wind) Tab Content -->
+        <div id="lateral-wind" class="tab-content active">
+            <div class="tool-header">
+                <h1><i class="fas fa-wind"></i> Lateral Displacement due to wind</h1>
+            </div>
+            
+            <div class="input-section">
+            <h2><i class="fas fa-table"></i> Input Data</h2>
+            
+            <div class="data-input-container">
+
+                
+                <!-- Manual Input Method -->
+                <div id="manualInput" class="input-method active">
+
+                    
+                    <div class="manual-input-controls">
+                        <div class="row-controls">
+                            <label for="rowCount">Number of Rows:</label>
+                            <input type="number" id="rowCount" min="1" max="50" value="11" onchange="adjustTableRows()">
+                            <button onclick="addSingleRow()" class="control-btn add-btn">
+                                <i class="fas fa-plus"></i> Add Row
+                            </button>
+                            <button onclick="removeLastRow()" class="control-btn remove-btn">
+                                <i class="fas fa-minus"></i> Remove Row
+                            </button>
+                        </div>
+                        <div class="action-controls">
+                            <button onclick="clearTable()" class="control-btn clear-btn">
+                                <i class="fas fa-eraser"></i> Clear All Data
+                            </button>
+                            <button onclick="fillSampleData()" class="control-btn process-btn">
+                                <i class="fas fa-clipboard"></i> Load Sample Data
+                            </button>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Story</th>
+                                    <th>Elevation (ft)</th>
+                                    <th>Location</th>
+                                    <th>X-Dir (in)</th>
+                                    <th>Y-Dir (in)</th>
+                                    <th>Allowable (in)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBody">
+                                <tr>
+                                    <td><input type="text" placeholder="ROOF" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="95" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.717" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.422" class="y-dir-input"></td>
+                                    <td class="allowable-cell">2.28</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="8F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="85" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.606" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.322" class="y-dir-input"></td>
+                                    <td class="allowable-cell">2.04</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="7F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="75" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.471" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.201" class="y-dir-input"></td>
+                                    <td class="allowable-cell">1.80</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="6F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="65" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.314" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.065" class="y-dir-input"></td>
+                                    <td class="allowable-cell">1.56</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="5F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="55" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="1.137" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.913" class="y-dir-input"></td>
+                                    <td class="allowable-cell">1.32</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="4F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="45" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.941" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.749" class="y-dir-input"></td>
+                                    <td class="allowable-cell">1.08</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="3F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="35" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.729" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.574" class="y-dir-input"></td>
+                                    <td class="allowable-cell">0.84</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="2F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="25" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.503" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.390" class="y-dir-input"></td>
+                                    <td class="allowable-cell">0.60</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="1F" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="15" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.271" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.207" class="y-dir-input"></td>
+                                    <td class="allowable-cell">0.36</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="MZ" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="7.5" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.111" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0.092" class="y-dir-input"></td>
+                                    <td class="allowable-cell">0.18</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="GF" class="story-input"></td>
+                                    <td><input type="number" step="0.01" placeholder="0" class="elevation-input" oninput="calculateAllowable(this)"></td>
+                                    <td><input type="text" placeholder="Top" class="location-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0" class="x-dir-input"></td>
+                                    <td><input type="number" step="0.001" placeholder="0" class="y-dir-input"></td>
+                                    <td class="allowable-cell">0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+
+            </div>
+            
+            <div class="calculation-controls">
+                <button onclick="calculateResults()" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Analyze Displacement
+                </button>
+            </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+            
+            <div class="results-summary" id="resultsSummary">
+                <!-- Summary will be populated here -->
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="displacementChart" width="800" height="400"></canvas>
+            </div>
+            
+            <div class="results-table">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Story</th>
+                            <th>Elevation (ft)</th>
+                            <th>Location</th>
+                            <th>X-Dir (in)</th>
+                            <th>X-Status</th>
+                            <th>Y-Dir (in)</th>
+                            <th>Y-Status</th>
+                            <th>Allowable (in)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pdf-section">
+                <button onclick="generatePDF()" class="pdf-btn">
+                    <i class="fas fa-file-pdf"></i> Generate PDF Report
+                </button>
+                
+                <div class="pdf-preview" id="pdfPreviewContainer" style="display: none;">
+                    <!-- PDF preview will be shown here -->
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <!-- Story Drift (Wind) Tab Content -->
+        <div id="story-wind" class="tab-content">
+            <div class="tool-header">
+                <h1><i class="fas fa-wind"></i> Story Drift due to Wind
+                    <span class="reference-tooltip">
+                        <i class="fas fa-info-circle reference-icon" title="Reference"></i>
+                        <span class="tooltip-text">BNBC 2020, Part 6, Chapter 1, Sec 1.5.6.1 - Storey Drift Limitation, Page: 3080</span>
+                    </span>
+                </h1>
+            </div>
+            
+            <!-- Building Time Period Calculation Section -->
+            <div class="time-period-section">
+                <h3><i class="fas fa-clock"></i> Building Time Period Calculation 
+                    <span class="reference-tooltip">
+                        <i class="fas fa-info-circle reference-icon" title="Reference"></i>
+                        <span class="tooltip-text">BNBC 2020, Part 6, Chapter 2, Section 2.5.7.2 - Building Period, Page: 3208</span>
+                    </span>
+                </h3>
+                <div class="time-period-container">
+                    <div class="time-period-inputs">
+                        <div class="form-group">
+                            <label for="structureType">Structure Type:</label>
+                            <select id="structureType">
+                                <option value="concrete_moment">Concrete moment-resisting frame</option>
+                                <option value="steel_moment">Steel moment-resisting frame</option>
+                                <option value="eccentrically_braced">Eccentrically braced frame</option>
+                                <option value="all_other">All other systems</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="buildingHeight">Building Height (ft):</label>
+                            <input type="number" id="buildingHeight" value="25" min="0" step="0.1">
+                        </div>
+                        <div class="time-period-results">
+                            <div class="result-item">
+                                <span class="result-label">Ct:</span>
+                                <span id="ctResult">0.0466</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">m:</span>
+                                <span id="mResult">0.9</span>
+                            </div>
+                            <div class="result-item main-result">
+                                <span class="result-label">Time Period (T):</span>
+                                <span id="timePeriodResult">0.000<span class="result-unit">sec</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-input-container">
+                <!-- Manual Input Method -->
+                <div id="storyDriftManualInput" class="input-method active">
+                    <div class="manual-input-controls">
+                        <div class="row-controls">
+                            <label for="storyDriftRowCount">Number of Rows:</label>
+                            <input type="number" id="storyDriftRowCount" min="1" max="50" value="7" onchange="adjustStoryDriftTableRows()">
+                            <button onclick="addStoryDriftSingleRow()" class="control-btn add-btn">
+                                <i class="fas fa-plus"></i> Add Row
+                            </button>
+                            <button onclick="removeStoryDriftLastRow()" class="control-btn remove-btn">
+                                <i class="fas fa-minus"></i> Remove Row
+                            </button>
+                        </div>
+                        <div class="action-controls">
+                            <button onclick="clearStoryDriftTable()" class="control-btn clear-btn">
+                                <i class="fas fa-eraser"></i> Clear All Data
+                            </button>
+                            <button onclick="fillStoryDriftSampleData()" class="control-btn process-btn">
+                                <i class="fas fa-clipboard"></i> Load Sample Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Two side-by-side tables -->
+                    <div class="dual-table-container">
+                        <!-- Wx Load Case Table -->
+                        <div class="table-section">
+                            <h3>Wx Load Case</h3>
+                            <div class="table-container">
+                                <table class="data-table" id="storyDriftWxTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Story</th>
+                                            <th>Direction</th>
+                                            <th>Story Elevation</th>
+                                            <th>Story Height (ft)</th>
+                                            <th>Elastic Displacement δ (in)</th>
+                                            <th>Drift (in)</th>
+                                            <th>Allowable drift (in)</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="storyDriftWxTableBody">
+                                        <!-- Table rows will be generated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Wy Load Case Table -->
+                        <div class="table-section">
+                            <h3>Wy Load Case</h3>
+                            <div class="table-container">
+                                <table class="data-table" id="storyDriftWyTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Story</th>
+                                            <th>Direction</th>
+                                            <th>Story Elevation</th>
+                                            <th>Story Height (ft)</th>
+                                            <th>Elastic Displacement δ (in)</th>
+                                            <th>Drift (in)</th>
+                                            <th>Allowable drift (in)</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="storyDriftWyTableBody">
+                                        <!-- Table rows will be generated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calculation-controls">
+                <button onclick="calculateStoryDriftResults()" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Analyze Story Drift
+                </button>
+            </div>
+            
+            <div class="results-section" id="storyDriftResultsSection" style="display: none;">
+                <h2><i class="fas fa-chart-line"></i> Story Drift Results</h2>
+                <div class="results-summary" id="storyDriftResultsSummary"></div>
+                <div class="chart-container">
+                    <canvas id="storyDriftChart" width="800" height="400"></canvas>
+                </div>
+                
+                <div class="results-table">
+                    <table id="storyDriftResultsTable">
+                        <thead>
+                            <tr>
+                                <th>Story</th>
+                                <th>Load Case</th>
+                                <th>Direction</th>
+                                <th>Story Height (ft)</th>
+                                <th>Elastic Displacement (in)</th>
+                                <th>Drift (in)</th>
+                                <th>Drift Status</th>
+                                <th>Allowable Drift (in)</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody id="storyDriftResultsTableBody">
+                            <!-- Results will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pdf-section">
+                    <button onclick="generateStoryDriftPDF()" class="pdf-btn">
+                        <i class="fas fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                    
+                    <div class="pdf-preview" id="storyDriftPdfPreviewContainer" style="display: none;">
+                        <!-- PDF preview will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lateral Displacement (EQ) Tab Content -->
+        <div id="lateral-eq" class="tab-content">
+            <div class="tool-header">
+                <h1><i class="fas fa-wave-square"></i> Lateral Displacement due to Earthquake</h1>
+            </div>
+            
+            <div class="input-section">
+            <h2><i class="fas fa-table"></i> Input Data</h2>
+            
+            <div class="data-input-container">
+
+                
+                <!-- Manual Input Method -->
+                <div id="manualInputEQ" class="input-method active">
+
+                    
+                    <div class="parameter-inputs">
+                        <div class="input-group">
+                            <label for="cdValueEQ">Deflection Amplification Factor (C<sub>d</sub>):</label>
+                            <input type="number" id="cdValueEQ" step="0.01" value="5.0" min="0.1" max="10" oninput="updateAllAmplifiedValuesEQ()">
+                        </div>
+                        <div class="input-group">
+                            <label for="iValueEQ">Importance Factor (I):</label>
+                            <input type="number" id="iValueEQ" step="0.01" value="1.0" min="0.5" max="2" oninput="updateAllAmplifiedValuesEQ()">
+                        </div>
+                    </div>
+                    
+                    <div class="manual-input-controls">
+                        <div class="row-controls">
+                            <label for="rowCountEQ">Number of Rows:</label>
+                            <input type="number" id="rowCountEQ" min="1" max="50" value="11" onchange="adjustTableRowsEQ()">
+                            <button onclick="addSingleRowEQ()" class="control-btn add-btn">
+                                <i class="fas fa-plus"></i> Add Row
+                            </button>
+                            <button onclick="removeLastRowEQ()" class="control-btn remove-btn">
+                                <i class="fas fa-minus"></i> Remove Row
+                            </button>
+                        </div>
+                        <div class="action-controls">
+                            <button onclick="clearTableEQ()" class="control-btn clear-btn">
+                                <i class="fas fa-eraser"></i> Clear All Data
+                            </button>
+                            <button onclick="fillSampleDataEQ()" class="control-btn process-btn">
+                                <i class="fas fa-clipboard"></i> Load Sample Data
+                            </button>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="dataTableEQ">
+                            <thead>
+                                <tr>
+                                    <th>Story</th>
+                                    <th>Elevation (ft)</th>
+                                    <th>Location</th>
+                                    <th>X-Dir (in)</th>
+                                    <th>Amplified X-Dir (in)</th>
+                                    <th>Y-Dir (in)</th>
+                                    <th>Amplified Y-Dir (in)</th>
+                                    <th>Allowable (in)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBodyEQ">
+                                <!-- Table rows will be generated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calculation-controls">
+                <button onclick="calculateResultsEQ()" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Analyze Displacement
+                </button>
+            </div>
+            
+            <div class="results-section" id="resultsSectionEQ" style="display: none;">
+                <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+                <div class="results-summary" id="resultsSummaryEQ"></div>
+                <div class="chart-container">
+                    <canvas id="displacementChartEQ" width="800" height="400"></canvas>
+                </div>
+                
+                <div class="results-table">
+                    <table id="resultsTableEQ">
+                        <thead>
+                            <tr>
+                                <th>Story</th>
+                                <th>Elevation (ft)</th>
+                                <th>Location</th>
+                                <th>X-Dir (in)</th>
+                                <th>Y-Dir (in)</th>
+                                <th>Max Displacement (in)</th>
+                                <th>Allowable (in)</th>
+                                <th>Status</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBodyEQ">
+                            <!-- Results will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pdf-section">
+                    <button onclick="generatePDFEQ()" class="pdf-btn">
+                        <i class="fas fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                    
+                    <div class="pdf-preview" id="pdfPreviewContainerEQ" style="display: none;">
+                        <!-- PDF preview will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Story Drift (EQ) Tab Content -->
+        <div id="story-eq" class="tab-content">
+            <div class="tool-header">
+                <h1><i class="fas fa-wave-square"></i> Story Drift (Earthquake)</h1>
+                <p>Analyze story drift for earthquake forces</p>
+            </div>
+            <div class="placeholder-content">
+                <p>Earthquake story drift analysis coming soon...</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 StrucVision. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="serviceability-check-script.js"></script>
+    
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Add active class to clicked button
+            const clickedButton = event.target;
+            clickedButton.classList.add('active');
+            
+            // Initialize story drift tables when Story Drift tab is activated
+            if (tabId === 'story-wind') {
+                setTimeout(() => {
+                    if (typeof adjustStoryDriftTableRows === 'function') {
+                        adjustStoryDriftTableRows();
+                        if (typeof fillStoryDriftSampleData === 'function') {
+                            fillStoryDriftSampleData();
+                        }
+                        if (typeof setupStoryDriftColumnPasteListeners === 'function') {
+                            setupStoryDriftColumnPasteListeners();
+                        }
+                    }
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
