@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
          } catch (error) {
              console.error('Error loading JPG:', error);
              // Fallback to clear diagram if JPG loading fails
-             doc.setLineWidth(1);
+             doc.setLineWidth(0.2);
              doc.rect(25, 45, 160, 120);
              doc.setFontSize(16);
              doc.text('Cross-Section Diagram', 335, 70, { align: 'center' });

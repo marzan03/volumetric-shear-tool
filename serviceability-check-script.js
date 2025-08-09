@@ -551,6 +551,10 @@ function createDisplacementChart(results) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            devicePixelRatio: window.devicePixelRatio || 1,
+            animation: {
+                duration: 0 // Disable animation for better PDF capture
+            },
             plugins: {
                 title: {
                     display: true,
@@ -640,6 +644,7 @@ function generatePDF() {
             const chartImgData = chartCanvas.toDataURL('image/png');
             doc.addImage(chartImgData, 'PNG', 20, yPos, 170, 85);
             // Add border around chart
+            doc.setLineWidth(0.2);
             doc.rect(20, yPos, 170, 85);
             yPos += 95;
         }
@@ -1537,19 +1542,19 @@ function generateStoryDriftPDF() {
         
         let yPos = 50;
         
-        // Get chart canvas and add to PDF with border (ultra high resolution)
+        // Get chart canvas and add to PDF with optimized quality/size balance
         const chartCanvas = document.getElementById('storyDriftChart');
         if (chartCanvas) {
-            // Create a high-resolution version of the chart
+            // Create a high-resolution version of the chart with optimized settings
             const tempCanvas = document.createElement('canvas');
-            const scaleFactor = 5; // Increase resolution by 5x for ultra-high quality
+            const scaleFactor = 3; // Reduced from 5 to 3 for smaller file size
             tempCanvas.width = chartCanvas.width * scaleFactor;
             tempCanvas.height = chartCanvas.height * scaleFactor;
             
             const tempCtx = tempCanvas.getContext('2d');
-            // Enable anti-aliasing for smoother lines
+            // Enable anti-aliasing with medium quality for balance
             tempCtx.imageSmoothingEnabled = true;
-            tempCtx.imageSmoothingQuality = 'high';
+            tempCtx.imageSmoothingQuality = 'medium';
             
             // Clear the canvas with white background
             tempCtx.fillStyle = 'white';
@@ -1559,12 +1564,13 @@ function generateStoryDriftPDF() {
             tempCtx.scale(scaleFactor, scaleFactor);
             tempCtx.drawImage(chartCanvas, 0, 0);
             
-            // Get image data with maximum quality
-            const chartImgData = tempCanvas.toDataURL('image/png', 1.0);
+            // Get image data as JPEG with 85% quality for smaller file size
+            const chartImgData = tempCanvas.toDataURL('image/jpeg', 0.85);
             
-            // Add the high-resolution image to PDF
-            doc.addImage(chartImgData, 'PNG', 20, yPos, 170, 85);
-            // Add border around chart
+            // Add the optimized image to PDF
+            doc.addImage(chartImgData, 'JPEG', 20, yPos, 170, 85);
+            // Add thin border around chart
+            doc.setLineWidth(0.2);
             doc.rect(20, yPos, 170, 85);
             yPos += 95;
         }
@@ -1582,11 +1588,11 @@ function generateStoryDriftPDF() {
         const driftCoefficient = timePeriod >= 0.7 ? 0.004 : 0.005;
         const allowableLimit = driftCoefficient * maxDriftRowStoryHeight * 12;
         
-        // Add results table
+        // Add results table with simplified formatting
         doc.setFontSize(10);
         doc.setFont(undefined, 'bold');
         
-        // Table headers
+        // Table headers with simple underline
         doc.text('Story', 20, yPos);
         doc.text('Load Case', 45, yPos);
         doc.text('Dir', 75, yPos);
@@ -1596,13 +1602,13 @@ function generateStoryDriftPDF() {
         doc.text('Status', 165, yPos);
         doc.text('Allow(in)', 185, yPos);
         
-        // Draw line under headers
-        doc.line(20, yPos + 2, 210, yPos + 2);
+        // Simple underline for headers
+        doc.line(20, yPos + 2, 200, yPos + 2);
         
-        yPos += 8;
+        yPos += 6;
         doc.setFont(undefined, 'normal');
         
-        // Add data rows
+        // Add data rows with simplified formatting
         results.forEach((result, index) => {
             if (yPos > 270) { // Start new page if needed
                 doc.addPage();
@@ -1616,33 +1622,37 @@ function generateStoryDriftPDF() {
             doc.text(result.displacement.toFixed(3), 115, yPos);
             doc.text(result.drift.toFixed(3), 140, yPos);
             
-            // Color code status
-            doc.setTextColor(result.driftStatus === 'PASS' ? 0 : 255, result.driftStatus === 'PASS' ? 128 : 0, 0);
+            // Simplified color coding for status
+            if (result.driftStatus === 'FAIL') {
+                doc.setTextColor(150, 0, 0); // Dark red for FAIL
+            } else {
+                doc.setTextColor(0, 100, 0); // Dark green for PASS
+            }
             doc.text(result.driftStatus, 165, yPos);
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(0, 0, 0); // Reset to black
             
             doc.text(result.allowable.toFixed(3), 185, yPos);
             
-            yPos += 6;
+            yPos += 5; // Reduced row height
         });
         
-        // Add analysis text with reduced spacing
+        // Add analysis text
         yPos += 10;
         doc.setFontSize(12);
         doc.setFont(undefined, 'normal');
         
         doc.text(`Maximum drift value = ${maxDrift.toFixed(3)} in at ${maxDriftEntry?.story || 'N/A'} (${maxDriftEntry?.direction || 'N/A'} direction)`, 20, yPos);
-        yPos += 10;
+        yPos += 6;
         
         doc.text(`Allowable drift = ${driftCoefficient.toFixed(3)} × ${maxDriftRowStoryHeight.toFixed(1)} × 12 = ${allowableLimit.toFixed(3)} in`, 20, yPos);
-        yPos += 10;
+        yPos += 6;
         
         const complianceStatus = allowableLimit > maxDrift ? 'OK' : 'Not Ok';
         doc.text(`Comparison: Allowable drift > Maximum drift (${complianceStatus})`, 20, yPos);
-        yPos += 10;
+        yPos += 8;
         
-        doc.setFontSize(10);
-        doc.text('BNBC 2020, Part 6, Chapter 1, Sec 1.5.6.1 - Storey Drift Limitation, Page: 3080', 20, yPos);
+        doc.setFontSize(9);
+        doc.text('Reference: BNBC 2020, Part 6, Chapter 1, Sec 1.5.6.1 - Storey Drift Limitation, Page: 3080', 20, yPos);
         
         // Create PDF blob and URL
         const pdfBlob = doc.output('blob');
@@ -1958,12 +1968,17 @@ function addSingleRowEQ() {
     
     tableBody.appendChild(newRow);
     setupRowEventListenersEQ(newRow, tableBody.children.length - 1);
+    
+    // Update row count input
+    document.getElementById('rowCountEQ').value = tableBody.children.length;
 }
 
 function removeLastRowEQ() {
     const tableBody = document.getElementById('dataTableBodyEQ');
     if (tableBody.children.length > 1) {
         tableBody.removeChild(tableBody.lastElementChild);
+        // Update row count input
+        document.getElementById('rowCountEQ').value = tableBody.children.length;
     }
 }
 
@@ -2031,17 +2046,15 @@ function fillPastedDataEQ(rows, lines, startRowIndex, columnIndex) {
 
 function fillSampleDataEQ() {
     const sampleData = [
-        ['ROOF', '95', 'Top', '2.146', '1.777'],
-        ['8F', '85', 'Top', '1.999', '1.655'],
-        ['7F', '75', 'Top', '1.831', '1.516'],
-        ['6F', '65', 'Top', '1.643', '1.361'],
-        ['5F', '55', 'Top', '1.437', '1.190'],
-        ['4F', '45', 'Top', '1.214', '1.005'],
-        ['3F', '35', 'Top', '0.976', '0.808'],
-        ['2F', '25', 'Top', '0.725', '0.600'],
-        ['1F', '15', 'Top', '0.463', '0.383'],
-        ['GF', '5', 'Top', '0.194', '0.161'],
-        ['BASE', '0', 'Base', '0.000', '0.000']
+        ['ROOF', '76', 'Top', '1.345788', '', '2.473209'],
+        ['6F', '66', 'Top', '1.157996', '', '2.197646'],
+        ['5F', '56', 'Top', '0.954631', '', '1.870366'],
+        ['4F', '46', 'Top', '0.744253', '', '1.492481'],
+        ['3F', '36', 'Top', '0.535893', '', '1.077718'],
+        ['2F', '26', 'Top', '0.336477', '', '0.671082'],
+        ['1F', '16', 'Top', '0.16201', '', '0.312591'],
+        ['GF', '6', 'Top', '0.035034', '', '0.056265'],
+        ['Base', '0', 'Top', '0', '', '0']
     ];
     
     adjustTableRowsEQ(sampleData.length);
@@ -2052,14 +2065,21 @@ function fillSampleDataEQ() {
     sampleData.forEach((data, index) => {
         if (index < rows.length) {
             const inputs = rows[index].querySelectorAll('input');
-            data.forEach((value, columnIndex) => {
-                if (columnIndex < inputs.length) {
-                    inputs[columnIndex].value = value;
-                    if (columnIndex === 1) { // Elevation column
-                        calculateAllowableEQ(inputs[columnIndex]);
-                    }
-                }
-            });
+            // Fill only the input columns (skip amplified columns)
+            if (inputs.length >= 7) {
+                inputs[0].value = data[0]; // Story
+                inputs[1].value = data[1]; // Elevation
+                inputs[2].value = data[2]; // Location
+                inputs[3].value = data[3]; // X-Dir
+                inputs[5].value = data[5]; // Y-Dir (skip amplified X-Dir at index 4)
+                
+                // Calculate allowable for elevation
+                calculateAllowableEQ(inputs[1]);
+                
+                // Calculate amplified values
+                calculateAmplifiedEQ(inputs[3], 'x'); // X-Dir
+                calculateAmplifiedEQ(inputs[5], 'y'); // Y-Dir
+            }
         }
     });
 }
@@ -2127,7 +2147,7 @@ function calculateResultsEQ() {
     }
     
     const results = eqData.map(row => {
-        const maxDisplacement = Math.max(Math.abs(row.xDir), Math.abs(row.yDir));
+        const maxDisplacement = Math.max(Math.abs(row.amplifiedXDir), Math.abs(row.amplifiedYDir));
         const status = maxDisplacement <= row.allowable ? 'PASS' : 'FAIL';
         const remark = maxDisplacement <= row.allowable ? 'OK' : 'Exceeds Limit';
         
@@ -2190,53 +2210,83 @@ function displaySummaryEQ(results) {
     const minAllowable = Math.min(...results.map(r => r.allowable));
     const maxAllowable = Math.max(...results.map(r => r.allowable));
     
-    const overallStatus = failCount === 0 ? 'PASS' : 'FAIL';
-    const statusClass = overallStatus === 'PASS' ? 'status-pass' : 'status-fail';
+    const overallCompliance = failCount === 0;
+    const failedStories = results.filter(r => r.status === 'FAIL');
     
-    summaryDiv.innerHTML = `
-        <div class="summary-grid">
-            <div class="summary-item">
-                <div class="summary-label">Total Stories Analyzed</div>
-                <div class="summary-value">${totalStories}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Stories Passing</div>
-                <div class="summary-value status-pass">${passCount}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Stories Failing</div>
-                <div class="summary-value status-fail">${failCount}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Overall Status</div>
-                <div class="summary-value ${statusClass}">${overallStatus}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Maximum Displacement</div>
-                <div class="summary-value">${maxDisplacement.toFixed(3)} in</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Critical Story</div>
-                <div class="summary-value">${maxDisplacementStory ? maxDisplacementStory.story : 'N/A'}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Allowable Range</div>
-                <div class="summary-value">${minAllowable.toFixed(2)} - ${maxAllowable.toFixed(2)} in</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Analysis Type</div>
-                <div class="summary-value">Earthquake Displacement (H/400)</div>
+    let summaryHTML = `
+        <div class="summary-header">
+            <h3><i class="fas fa-chart-bar"></i> Lateral Displacement Analysis Summary</h3>
+            <div class="overall-status ${overallCompliance ? 'pass' : 'fail'}">
+                <i class="fas fa-${overallCompliance ? 'check-circle' : 'exclamation-triangle'}"></i>
+                ${overallCompliance ? 'ALL STORIES COMPLIANT' : 'COMPLIANCE ISSUES FOUND'}
             </div>
         </div>
+        
+        <div class="summary-stats">
+            <div class="stat-item">
+                <div class="stat-value">${totalStories}</div>
+                <div class="stat-label">Total Stories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${passCount}</div>
+                <div class="stat-label">Compliant</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${failCount}</div>
+                <div class="stat-label">Non-Compliant</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${maxDisplacement.toFixed(3)}"</div>
+                <div class="stat-label">Max Displacement</div>
+            </div>
+        </div>
+        
+        <div class="summary-details">
+            <div class="detail-item"><strong>Maximum Displacement:</strong> ${maxDisplacement.toFixed(3)}" at ${maxDisplacementStory ? maxDisplacementStory.story : 'N/A'}</div>
+            <div class="detail-item"><strong>Allowable Range:</strong> ${minAllowable.toFixed(2)} - ${maxAllowable.toFixed(2)} in</div>
+            <div class="detail-item"><strong>Compliance Rate:</strong> ${((passCount / totalStories) * 100).toFixed(1)}%</div>
+        </div>
     `;
+    
+    if (failedStories.length > 0) {
+        summaryHTML += `
+            <div class="failed-stories">
+                <h4><i class="fas fa-exclamation-triangle"></i> Non-Compliant Stories</h4>
+                <ul>
+                    ${failedStories.map(story => 
+                        `<li>${story.story}: ${story.maxDisplacement.toFixed(3)}" (Allowable: ${story.allowable.toFixed(2)}")</li>`
+                    ).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    summaryDiv.innerHTML = summaryHTML;
 }
 
 function createDisplacementChartEQ(results) {
-    const ctx = document.getElementById('displacementChartEQ').getContext('2d');
+    const canvas = document.getElementById('displacementChartEQ');
+    const ctx = canvas.getContext('2d');
     
-    // Enable high-quality rendering
+    // Set high-resolution canvas for better quality
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    
+    // Set actual canvas size in memory (scaled up for high DPI)
+    canvas.width = rect.width * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+    
+    // Scale the canvas back down using CSS
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    
+    // Scale the drawing context so everything draws at the correct size
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    
+    // Enable maximum quality rendering
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
+    ctx.textRenderingOptimization = 'optimizeQuality';
     
     // Destroy existing chart if it exists
     if (window.eqDisplacementChart) {
@@ -2247,44 +2297,46 @@ function createDisplacementChartEQ(results) {
     const sortedResults = [...results].sort((a, b) => a.elevation - b.elevation);
     
     const elevations = sortedResults.map(r => r.elevation);
-    const xDisplacements = sortedResults.map(r => Math.abs(r.xDir));
-    const yDisplacements = sortedResults.map(r => Math.abs(r.yDir));
+    const xDisplacements = sortedResults.map(r => Math.abs(r.amplifiedXDir));
+    const yDisplacements = sortedResults.map(r => Math.abs(r.amplifiedYDir));
     const allowableValues = sortedResults.map(r => r.allowable);
     
     window.eqDisplacementChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: elevations,
             datasets: [
                 {
-                    label: 'X-Direction',
-                    data: xDisplacements,
+                    label: 'Ex (2020)',
+                    data: xDisplacements.map((x, i) => ({ x: x, y: elevations[i] })),
                     borderColor: 'rgb(54, 162, 235)',
                     backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                    borderWidth: 4,
+                    borderWidth: 3,
                     fill: false,
                     tension: 0.1,
-                    cubicInterpolationMode: 'monotone'
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(54, 162, 235)'
                 },
                 {
-                    label: 'Y-Direction',
-                    data: yDisplacements,
+                    label: 'Ey (2020)',
+                    data: yDisplacements.map((y, i) => ({ x: y, y: elevations[i] })),
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                    borderWidth: 4,
+                    borderWidth: 3,
                     fill: false,
                     tension: 0.1,
-                    cubicInterpolationMode: 'monotone'
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(255, 99, 132)'
                 },
                 {
                     label: 'Allowable',
-                    data: allowableValues,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                    borderWidth: 4,
+                    data: allowableValues.map((a, i) => ({ x: a, y: elevations[i] })),
+                    borderColor: 'rgb(128, 128, 128)',
+                    backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                    borderWidth: 3,
                     fill: false,
                     tension: 0.1,
-                    cubicInterpolationMode: 'monotone'
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(128, 128, 128)'
                 }
             ]
         },
@@ -2294,7 +2346,7 @@ function createDisplacementChartEQ(results) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Earthquake Displacement Analysis',
+                    text: 'SEISMIC TOTAL DISPLACEMENT',
                     font: {
                         size: 18,
                         weight: 'bold',
@@ -2335,34 +2387,15 @@ function createDisplacementChartEQ(results) {
                     displayColors: true,
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + context.parsed.y.toFixed(3) + ' in';
+                            return context.dataset.label + ': ' + context.parsed.x.toFixed(3) + ' in at ' + context.parsed.y.toFixed(1) + ' ft';
                         }
                     }
                 }
             },
             scales: {
                 x: {
-                    title: {
-                        display: true,
-                        text: 'Elevation (ft)',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        color: '#374151'
-                    },
-                    grid: {
-                        color: '#e5e7eb',
-                        lineWidth: 1.5
-                    },
-                    ticks: {
-                        font: {
-                            size: 12
-                        },
-                        padding: 8
-                    }
-                },
-                y: {
+                    type: 'linear',
+                    position: 'bottom',
                     title: {
                         display: true,
                         text: 'Displacement (in)',
@@ -2384,6 +2417,29 @@ function createDisplacementChartEQ(results) {
                         callback: function(value) {
                             return value.toFixed(3);
                         }
+                    },
+                    beginAtZero: true
+                },
+                y: {
+                    type: 'linear',
+                    title: {
+                        display: true,
+                        text: 'Elevation (ft)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        color: '#374151'
+                    },
+                    grid: {
+                        color: '#e5e7eb',
+                        lineWidth: 1.5
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        },
+                        padding: 8
                     },
                     beginAtZero: true
                 }
@@ -2412,31 +2468,38 @@ function generatePDFEQ() {
     // Get chart canvas and add to PDF with border (ultra high resolution)
     const chartCanvas = document.getElementById('displacementChartEQ');
     if (chartCanvas) {
-        // Create a high-resolution version of the chart
+        // Create an optimized version of the chart for smaller file size
         const tempCanvas = document.createElement('canvas');
-        const scaleFactor = 5; // Increase resolution by 5x for ultra-high quality
+        const scaleFactor = 3; // Reduced scale factor for smaller file size
+        
+        // Set canvas size with moderate resolution
         tempCanvas.width = chartCanvas.width * scaleFactor;
         tempCanvas.height = chartCanvas.height * scaleFactor;
         
         const tempCtx = tempCanvas.getContext('2d');
-        // Enable anti-aliasing for smoother lines
+        
+        // Enable good quality rendering with optimization
         tempCtx.imageSmoothingEnabled = true;
-        tempCtx.imageSmoothingQuality = 'high';
+        tempCtx.imageSmoothingQuality = 'medium';
         
         // Clear the canvas with white background
         tempCtx.fillStyle = 'white';
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
         
-        // Scale and draw the original chart
+        // Scale the context for rendering
         tempCtx.scale(scaleFactor, scaleFactor);
+        
+        // Draw the original chart
         tempCtx.drawImage(chartCanvas, 0, 0);
         
-        // Get image data with maximum quality
-        const chartImgData = tempCanvas.toDataURL('image/png', 1.0);
+        // Get image data with optimized quality (JPEG format for smaller size)
+        const chartImgData = tempCanvas.toDataURL('image/jpeg', 0.85);
         
-        // Add the high-resolution image to PDF
-        doc.addImage(chartImgData, 'PNG', 20, yPos, 170, 85);
-        // Add border around chart
+        // Add the optimized image to PDF with precise positioning
+        doc.addImage(chartImgData, 'JPEG', 20, yPos, 170, 85);
+        
+        // Add border around chart with fine line width
+        doc.setLineWidth(0.2);
         doc.rect(20, yPos, 170, 85);
         yPos += 95;
     }
@@ -2475,52 +2538,104 @@ function generatePDFEQ() {
     
     yPos += 10;
     
-    // Add results table
+    // Add input parameters section
     doc.setFontSize(14);
     doc.setFont(undefined, 'bold');
-    doc.text('Detailed Results:', 20, yPos);
+    doc.text('Input Parameters:', 20, yPos);
+    yPos += 12;
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    
+    // Get input values from the form
+    const cdValue = document.getElementById('cdValueEQ')?.value || 'N/A';
+    const iValue = document.getElementById('iValueEQ')?.value || 'N/A';
+    
+    const inputParams = [
+        `Deflection Amplification Factor (Cd): ${cdValue}`,
+        `Importance Factor (I): ${iValue}`,
+        `Allowable Drift Limit: H/400 (Earthquake)`
+    ];
+    
+    inputParams.forEach(param => {
+        doc.text(param, 20, yPos);
+        yPos += 7;
+    });
+    
+    yPos += 10;
+    
+    // Add detailed results table with enhanced formatting
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('Detailed Analysis Results:', 20, yPos);
     yPos += 15;
     
-    // Table headers
-    doc.setFontSize(10);
-    doc.setFont(undefined, 'bold');
-    const headers = ['Story', 'Elev(ft)', 'X-Dir(in)', 'Y-Dir(in)', 'Max(in)', 'Allow(in)', 'Status'];
-    const colWidths = [25, 20, 20, 20, 20, 20, 20];
-    let xPos = 20;
+    // Simplified table for smaller file size
+     const tableStartY = yPos;
+     const rowHeight = 7;
+     
+     // Simple table headers
+     doc.setFontSize(9);
+     doc.setFont(undefined, 'bold');
+     const headers = ['Story', 'Elevation', 'Location', 'X-Dir', 'Ampl X', 'Y-Dir', 'Ampl Y', 'Max Disp', 'Allowable', 'Status'];
+     const colWidths = [15, 18, 18, 15, 15, 15, 15, 18, 18, 13];
+     let xPos = 20;
+     
+     headers.forEach((header, index) => {
+         doc.text(header, xPos, yPos);
+         xPos += colWidths[index];
+     });
+     
+     yPos += rowHeight;
+     
+     // Simple underline for headers
+     doc.setDrawColor(0, 0, 0);
+     doc.setLineWidth(0.3);
+     doc.line(20, yPos - 2, 190, yPos - 2);
     
-    headers.forEach((header, index) => {
-        doc.text(header, xPos, yPos);
-        xPos += colWidths[index];
-    });
-    
-    yPos += 8;
-    
-    // Table data
-    doc.setFont(undefined, 'normal');
-    results.forEach(result => {
-        if (yPos > 270) { // Start new page if needed
-            doc.addPage();
-            yPos = 30;
-        }
-        
-        xPos = 20;
-        const rowData = [
-            result.story,
-            result.elevation.toFixed(1),
-            result.xDir.toFixed(3),
-            result.yDir.toFixed(3),
-            result.maxDisplacement.toFixed(3),
-            result.allowable.toFixed(2),
-            result.status
-        ];
-        
-        rowData.forEach((data, index) => {
-            doc.text(data.toString(), xPos, yPos);
-            xPos += colWidths[index];
-        });
-        
-        yPos += 6;
-    });
+    // Simplified table data
+     doc.setFont(undefined, 'normal');
+     doc.setFontSize(8);
+     
+     results.forEach((result, index) => {
+         if (yPos > 270) { // Start new page if needed
+             doc.addPage();
+             yPos = 30;
+         }
+         
+         xPos = 20;
+         const rowData = [
+             result.story || 'N/A',
+             result.elevation.toFixed(1),
+             result.location || 'N/A',
+             result.xDir.toFixed(3),
+             result.amplifiedXDir.toFixed(3),
+             result.yDir.toFixed(3),
+             result.amplifiedYDir.toFixed(3),
+             result.maxDisplacement.toFixed(3),
+             result.allowable.toFixed(3),
+             result.status
+         ];
+         
+         rowData.forEach((data, colIndex) => {
+             // Simple color coding for status only
+             if (colIndex === rowData.length - 1) {
+                 if (result.status === 'FAIL') {
+                     doc.setTextColor(200, 0, 0); // Darker red for FAIL
+                 } else {
+                     doc.setTextColor(0, 100, 0); // Darker green for PASS
+                 }
+             } else {
+                 doc.setTextColor(0, 0, 0); // Black text for other columns
+             }
+             
+             doc.text(data.toString(), xPos, yPos);
+             xPos += colWidths[colIndex];
+         });
+         
+         doc.setTextColor(0, 0, 0); // Reset text color
+         yPos += rowHeight;
+     });
     
     // Add footer
     const pageCount = doc.internal.getNumberOfPages();

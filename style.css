@@ -2275,6 +2275,179 @@ tr:hover {
     min-width: 50px;
 }
 
+/* Lateral Displacement for Earthquake Summary Styling */
+#resultsSummaryEQ {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#resultsSummaryEQ .summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+#resultsSummaryEQ .overall-status {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#resultsSummaryEQ .overall-status.pass {
+    background: #d4edda;
+    color: #155724;
+}
+
+#resultsSummaryEQ .overall-status.fail {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+#resultsSummaryEQ .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#resultsSummaryEQ .stat-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+#resultsSummaryEQ .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+#resultsSummaryEQ .stat-label {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+#resultsSummaryEQ .summary-details {
+    margin-bottom: 15px;
+}
+
+#resultsSummaryEQ .detail-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 14px;
+}
+
+#resultsSummaryEQ .detail-item:last-child {
+    border-bottom: none;
+}
+
+#resultsSummaryEQ .failed-stories {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+#resultsSummaryEQ .failed-stories h4 {
+    color: #856404;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#resultsSummaryEQ .failed-stories ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+#resultsSummaryEQ .failed-stories li {
+    margin-bottom: 5px;
+    color: #856404;
+}
+
+/* Lateral Displacement for Earthquake Table Specific Styles */
+#resultsTableEQ {
+    table-layout: fixed !important;
+}
+
+#resultsTableEQ th {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    line-height: 1.2 !important;
+    padding: 8px 4px !important;
+}
+
+#resultsTableEQ td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* Story column - compact width */
+#resultsTableEQ th:nth-child(1),
+#resultsTableEQ td:nth-child(1) {
+    width: 60px !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+}
+
+/* Other columns maintain proportional widths */
+#resultsTableEQ th:nth-child(2),
+#resultsTableEQ td:nth-child(2) {
+    width: 100px !important;
+}
+
+#resultsTableEQ th:nth-child(3),
+#resultsTableEQ td:nth-child(3) {
+    width: 80px !important;
+}
+
+#resultsTableEQ th:nth-child(4),
+#resultsTableEQ td:nth-child(4) {
+    width: 80px !important;
+}
+
+#resultsTableEQ th:nth-child(5),
+#resultsTableEQ td:nth-child(5) {
+    width: 80px !important;
+}
+
+#resultsTableEQ th:nth-child(6),
+#resultsTableEQ td:nth-child(6) {
+    width: 100px !important;
+}
+
+#resultsTableEQ th:nth-child(7),
+#resultsTableEQ td:nth-child(7) {
+    width: 90px !important;
+}
+
+#resultsTableEQ th:nth-child(8),
+#resultsTableEQ td:nth-child(8) {
+    width: 80px !important;
+}
+
+#resultsTableEQ th:nth-child(9),
+#resultsTableEQ td:nth-child(9) {
+    width: 80px !important;
+}
+
 /* Image Upload Styles */
 .image-upload-section {
     margin: 20px 0;
